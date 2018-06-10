@@ -25,12 +25,12 @@ public class ClassHelper {
 	}
 	
 	/**
-	 * ¸ù¾İ°üÃû¼ÓÔØÀà·ÅÖÃµ½setÖĞ
+	 * æ ¹æ®åŒ…ååŠ è½½ç±»æ”¾ç½®åˆ°setä¸­
 	 * @param packageName
 	 * @return
 	 */
 	public static Set<Class<?>> getClassSet(String packageName){
-		// ¼ÓÔØÖ¸¶¨°üÏÂµÄÀàÖ®Ç°ÏÈÇå¿ÕÀà¼¯ºÏ£¬×¢ÒâÖ»ÄÜÓĞÒ»¸öÀà¼¯ºÏ
+		// åŠ è½½æŒ‡å®šåŒ…ä¸‹çš„ç±»ä¹‹å‰å…ˆæ¸…ç©ºç±»é›†åˆï¼Œæ³¨æ„åªèƒ½æœ‰ä¸€ä¸ªç±»é›†åˆ
 		class_set.clear();
 		
 		try {
@@ -42,7 +42,7 @@ public class ClassHelper {
 				if(protocol.equals("file")) {
 					addClass(class_set, url.getPath(), packageName);
 				} else if(protocol.equals("jar")){
-					// TODO jar´¦Àí
+					// TODO jarå¤„ç†
 				}
 			}
 		} catch (Exception e) {
@@ -50,7 +50,7 @@ public class ClassHelper {
 			e.printStackTrace();
 		}
 		
-		// ³õÊ¼»¯¸÷Àà×¢½âµÄÀà¼¯ºÏ
+		// åˆå§‹åŒ–å„ç±»æ³¨è§£çš„ç±»é›†åˆ
 		initAnnotationSet();
 		return class_set;
 	}
@@ -60,7 +60,7 @@ public class ClassHelper {
 	}
 	
 	/**
-	 * ¼ÓÔØÖ¸¶¨°üÏÂµÄÀà
+	 * åŠ è½½æŒ‡å®šåŒ…ä¸‹çš„ç±»
 	 * @param set
 	 * @param packagePath
 	 * @param packageName
@@ -84,14 +84,14 @@ public class ClassHelper {
 	}
 	
 	/**
-	 * »ñÈ¡¿ò¼ÜÖĞÄ¬ÈÏ°üµÄÀà
+	 * è·å–æ¡†æ¶ä¸­é»˜è®¤åŒ…çš„ç±»
 	 */
 	public static Set<Class<?>> getDefaultClassSet() {
 		return getClassSet(PropUtil.getField(TinyConstant.app_basepackage));
 	}
 	
 	/*
-	 * »ñÈ¡Ö¸¶¨ÀàµÄËùÓĞ×ÓÀà
+	 * è·å–æŒ‡å®šç±»çš„æ‰€æœ‰å­ç±»
 	 */
 	public static Set<Class<?>> getClassSetBySuper(Class<?> superClass){
 		Set<Class<?>> set = new HashSet<>();
@@ -104,7 +104,7 @@ public class ClassHelper {
 	}
 	
 	/**
-	 * »ñÈ¡´øÓĞÖ¸¶¨×¢½âµÄËùÓĞÀà
+	 * è·å–å¸¦æœ‰æŒ‡å®šæ³¨è§£çš„æ‰€æœ‰ç±»
 	 */
 	public static Set<Class<?>> getClassSetByAnnotation(Class<? extends Annotation> annotation){
 		Set<Class<?>> set = new HashSet<>();
@@ -114,6 +114,10 @@ public class ClassHelper {
 			}
 		}
 		return set;
+	}
+
+	public static Set<Class<?>> getBean_set() {
+		return bean_set;
 	}
 
 }

@@ -1,9 +1,11 @@
 package tiny.framework.core;
 
+import tiny.framework.aop.AopHelper;
 import tiny.framework.ioc.IOCEngine;
+import tiny.framework.mvc.ControllerHelper;
 
 /**
- * ¹æ¶¨¿ò¼Ü³õÊ¼»¯Ë³Ğò
+ * è§„å®šæ¡†æ¶åˆå§‹åŒ–é¡ºåº
  * @author lee
  *
  */
@@ -14,9 +16,9 @@ public class TinyClassLoader {
 		Class<?> cls[] = {
 				ClassHelper.class,
 				BeanHelper.class,
-//				AopHelper.class,
+				AopHelper.class,
 				IOCEngine.class,
-//				ControllerHelper.class
+				ControllerHelper.class
 		};
 		for(int i=0;i<cls.length;i++) {
 			try {

@@ -2,7 +2,7 @@ package tiny.framework.mvc;
 
 
 /**
- * Action类型的方法的参数，请求方法类型（get,post...）和请求路径
+ * Action绫诲瀷鐨勬柟娉曠殑鍙傛暟锛岃姹傛柟娉曠被鍨嬶紙get,post...锛夊拰璇锋眰璺緞
  * 
  * @author lijun
  *
@@ -18,8 +18,29 @@ public class TinyRequest {
 	
 	public TinyRequest(String methodType, String path) {
 		super();
-		this.methodType = methodType;
+		this.methodType = methodType.toUpperCase();
 		this.path = path;
+	}
+	
+	@Override
+	public int hashCode() {
+		String hash = methodType + "-" + path;
+		return hash.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof TinyRequest) {
+			TinyRequest request = (TinyRequest) obj;
+			if(this.methodType.equals(request.methodType) &&
+					this.path.equals(request.path)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String getMethodType() {

@@ -18,8 +18,8 @@ public class ClassUtil {
 	}
 	
 	/**
-	 * 若type是数字类型则返回对应的数字，默认值是0
-	 * 如果type不是数字类型则返回null
+	 * 鑻ype鏄暟瀛楃被鍨嬪垯杩斿洖瀵瑰簲鐨勬暟瀛楋紝榛樿鍊兼槸0
+	 * 濡傛灉type涓嶆槸鏁板瓧绫诲瀷鍒欒繑鍥瀗ull
 	 * @param obj
 	 * @param type
 	 * @return

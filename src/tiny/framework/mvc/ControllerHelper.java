@@ -22,11 +22,11 @@ public class ControllerHelper {
 		Map<Class<?>, Object> bean_map = BeanHelper.getBeanMap();
 		
 		for(Entry<Class<?>,Object> entry : bean_map.entrySet()) {
-			// »ñÈ¡ËùÓĞµÄcontrollerÀà
+			// è·å–æ‰€æœ‰çš„controllerç±»
 			Class<?> cls = entry.getKey();
 			Object instance = entry.getValue();
 			if(cls.isAnnotationPresent(Controller.class)) {
-				// »ñÈ¡ËùÓĞµÄ·½·¨£¬ÕÒ³ö´øÓĞactionµÄ·½·¨
+				// è·å–æ‰€æœ‰çš„æ–¹æ³•ï¼Œæ‰¾å‡ºå¸¦æœ‰actionçš„æ–¹æ³•
 				Method[] methods = cls.getDeclaredMethods();
 				for(Method method :methods) {
 					if(method.isAnnotationPresent(Action.class)) {
@@ -34,11 +34,10 @@ public class ControllerHelper {
 						String mapping = action.value();
 						TinyRequest request = new TinyRequest();
 						TinyHandler handler = new TinyHandler(instance , method);
-						if (method.isAnnotationPresent(JsonResponse.class)
-								|| cls.isAnnotationPresent(JsonResponse.class)) {
+						if ( cls.isAnnotationPresent(JsonResponse.class)) {
 							handler.setJsonResponse(true);
 						}
-						// ActionµÄÊéĞ´¹æÔòÎª£º @Action("GET:/login")
+						// Actionçš„ä¹¦å†™è§„åˆ™ä¸ºï¼š @Action("GET:/login")
 						if(mapping.contains(":")) {
 							String args[] = mapping.split(":");
 							if(args.length != 2) {
@@ -48,7 +47,7 @@ public class ControllerHelper {
 							request.setMethodType(args[0]);
 							request.setPath(args[1]);
 						}else {
-							// Ä¬ÈÏÊ¹ÓÃGET·½·¨
+							// é»˜è®¤ä½¿ç”¨GETæ–¹æ³•
 							request = new TinyRequest("GET" , mapping);
 							handler = new TinyHandler(instance, method);
 						}

@@ -21,7 +21,7 @@ public class PropUtil {
 			if (!propPath.endsWith(".properties")) {
 				propPath += ".properties";
 			}
-			//TODO ´Ë´úÂëÔÚwebÏîÄ¿ÏÂÊ¹ÓÃÊ±µÄÂ·¾¶£¬Ğè´ıĞŞ¸Ä
+			//TODO æ­¤ä»£ç åœ¨webé¡¹ç›®ä¸‹ä½¿ç”¨æ—¶çš„è·¯å¾„ï¼Œéœ€å¾…ä¿®æ”¹
 			String webPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
 			if(webPath.endsWith("/")) {
 				webPath+="/";

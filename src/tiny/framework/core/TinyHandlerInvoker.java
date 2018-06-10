@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
+
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -22,12 +24,14 @@ import javassist.NotFoundException;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+import tiny.framework.annotation.JsonResponse;
 import tiny.framework.mvc.FileHelper;
 import tiny.framework.mvc.TinyHandler;
+import tiny.framework.mvc.ViewResolver;
 import tiny.framework.tools.ConvertUtil;
 
 /**
- * HandlerµÄÊµ¼Êµ÷ÓÃ
+ * Handlerçš„å®é™…è°ƒç”¨
  * 
  * @author lijun
  *
@@ -40,16 +44,19 @@ public class TinyHandlerInvoker {
 		Method method = handler.getActionMethod();
 		List<Object> params;
 		if (ServletFileUpload.isMultipartContent(request)) {
-			// ÎÄ¼şÉÏ´«ÇëÇó
+			// æ–‡ä»¶ä¸Šä¼ è¯·æ±‚
 			params = FileHelper.getMultipartParamList(request, handler);
 		} else {
 			params = getParamList(request, handler);
 		}
 		try {
 
-			logger.debug("µ÷ÓÃ²ÎÊı{}", params);
+			logger.debug("è°ƒç”¨å‚æ•°{}", params);
 			Object result = method.invoke(instance, params.toArray());
-		//	ViewResolver.resolve(request, response, result);
+			if(handler.isJsonResponse() || method.isAnnotationPresent(JsonResponse.class)) {
+				result = JSON.toJSON(result);
+			}
+			ViewResolver.resolve(request, response, result);
 		} catch (Exception e) {
 			logger.error("tinyFramework:=====  ,fail to invoke method {} , cause {}" , method.getName() ,e);
 			System.out.println(e);
@@ -57,13 +64,13 @@ public class TinyHandlerInvoker {
 	}
 
 	/**
-	 * »ñÈ¡requestµÄÇëÇó²ÎÊıÁĞ±í TODO ½ö½öÄÜ»ñÈ¡String=StringÀàĞÍµÄ£¬´«Èë¶ÔÏóÀàĞÍºÍput¡¢deleteÇëÇó»¹Î´Ğ´
+	 * è·å–requestçš„è¯·æ±‚å‚æ•°åˆ—è¡¨ TODO ä»…ä»…èƒ½è·å–String=Stringç±»å‹çš„ï¼Œä¼ å…¥å¯¹è±¡ç±»å‹å’Œputã€deleteè¯·æ±‚è¿˜æœªå†™
 	 */
 	public static List<Object> getParams(HttpServletRequest request, TinyHandler handler) {
 		List<Object> paramList = new ArrayList<>();
 
 		/*
-		 * // TODO ÕâÖÖ·½·¨»ñµÃ·½·¨µÄĞÎ²ÎÃûÖ»ÄÜÔÚÌí¼ÓÁË-parameterµÄ±àÒë·½Ê½ÏÂ»ñµÃ£¬Ö»ÓĞ1.8Ö§³Ö // ·ñÔò»á±¨´í£¬´ı¸Ä½ø Method
+		 * // TODO è¿™ç§æ–¹æ³•è·å¾—æ–¹æ³•çš„å½¢å‚ååªèƒ½åœ¨æ·»åŠ äº†-parameterçš„ç¼–è¯‘æ–¹å¼ä¸‹è·å¾—ï¼Œåªæœ‰1.8æ”¯æŒ // å¦åˆ™ä¼šæŠ¥é”™ï¼Œå¾…æ”¹è¿› Method
 		 * method = handler.getActionMethod(); Enumeration<String> enumeration =
 		 * request.getParameterNames(); for(Parameter parameter :
 		 * method.getParameters()) { String paramName = parameter.getName(); String
@@ -71,7 +78,7 @@ public class TinyHandlerInvoker {
 		 * paramList.add(value); } }
 		 */
 
-		// Ê¹ÓÃjavassist»ñµÃ·½·¨ĞÎ²Î
+		// ä½¿ç”¨javassistè·å¾—æ–¹æ³•å½¢å‚
 		ClassPool pool = ClassPool.getDefault();
 		try {
 			CtClass ctClass = pool.get(handler.getControllerClass().getClass().getName());
@@ -80,7 +87,7 @@ public class TinyHandlerInvoker {
 			CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
 			LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute
 					.getAttribute(LocalVariableAttribute.tag);
-			// ÅĞ¶Ï¸Ã·½·¨ÊÇ·ñÎª¾²Ì¬·½·¨£¬¾²Ì¬·½·¨µÄµÚÒ»¸ö²ÎÊıÎªthis£¬»ñÈ¡²ÎÊıÁĞ±íÊ±ĞèÒª¼ÓÒ»
+			// åˆ¤æ–­è¯¥æ–¹æ³•æ˜¯å¦ä¸ºé™æ€æ–¹æ³•ï¼Œé™æ€æ–¹æ³•çš„ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºthisï¼Œè·å–å‚æ•°åˆ—è¡¨æ—¶éœ€è¦åŠ ä¸€
 			int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
 			for (int i = 0; i < ctMethod.getParameterTypes().length; i++) {
 				String key = attr.variableName(i + pos);
@@ -93,7 +100,7 @@ public class TinyHandlerInvoker {
 		} catch (NotFoundException e) {
 			logger.error("tinyFramework:=====  ,fail to get params in class {} ,method {} ",
 					handler.getControllerClass().getClass().getName(), handler.getActionMethod().getName());
-			System.err.println("javassist·½·¨»ñÈ¡ĞÎ²ÎÊ§°Ü" + e);
+			System.err.println("javassistæ–¹æ³•è·å–å½¢å‚å¤±è´¥" + e);
 			e.printStackTrace();
 		}
 
@@ -107,7 +114,7 @@ public class TinyHandlerInvoker {
 
 	
 	/**
-	 * »ñÈ¡·½·¨²ÎÊıÁĞ±í
+	 * è·å–æ–¹æ³•å‚æ•°åˆ—è¡¨
 	 * @param request
 	 * @param handler
 	 * @return
@@ -115,11 +122,11 @@ public class TinyHandlerInvoker {
 	public static List<Object> getParamList(HttpServletRequest request , TinyHandler handler){
 		LinkedHashMap<String, Class<?>> nameTypeMap = getNameTypeMap(handler);
 		List<Object> paramList = new ArrayList<>();
-		// MultipartÀàĞÍ±íµ¥£¬ÎÄ¼şÉÏ´«
+		// Multipartç±»å‹è¡¨å•ï¼Œæ–‡ä»¶ä¸Šä¼ 
 		if(ServletFileUpload.isMultipartContent(request)) {
 			
 		} else {
-			// ÆÕÍ¨±íµ¥²ÎÊı»ñÈ¡
+			// æ™®é€šè¡¨å•å‚æ•°è·å–
 			for(Entry<String, Class<?>> entry : nameTypeMap.entrySet()) {
 				String name = entry.getKey();
 				Class<?> type = entry.getValue();
@@ -133,13 +140,13 @@ public class TinyHandlerInvoker {
 	
 	
 	/**
-	 * Ê¹ÓÃjavassis·½·¨»ñÈ¡µ÷ÓÃµÄ·½·¨µÄĞÎ²Î-ÀàĞÍ Ó³Éä¹ØÏµ
+	 * ä½¿ç”¨javassisæ–¹æ³•è·å–è°ƒç”¨çš„æ–¹æ³•çš„å½¢å‚-ç±»å‹ æ˜ å°„å…³ç³»
 	 * @param handler
-	 * @return ·µ»ØÅÅĞòMap£¬Ë³ĞòÓë·½·¨¶¨ÒåµÄ²ÎÊıË³ĞòÒ»ÖÂ
+	 * @return è¿”å›æ’åºMapï¼Œé¡ºåºä¸æ–¹æ³•å®šä¹‰çš„å‚æ•°é¡ºåºä¸€è‡´
 	 */
 	public static LinkedHashMap<String, Class<?>> getNameTypeMap(TinyHandler handler) {
 		LinkedHashMap<String, Class<?>> nameTypeMap = new LinkedHashMap<>();
-		// Ê¹ÓÃjavassist»ñµÃ·½·¨ĞÎ²Î
+		// ä½¿ç”¨javassistè·å¾—æ–¹æ³•å½¢å‚
 		ClassPool pool = ClassPool.getDefault();
 		Method method = handler.getActionMethod();
 		try {
@@ -149,7 +156,7 @@ public class TinyHandlerInvoker {
 			CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
 			LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute
 					.getAttribute(LocalVariableAttribute.tag);
-			// ÅĞ¶Ï¸Ã·½·¨ÊÇ·ñÎª¾²Ì¬·½·¨£¬¾²Ì¬·½·¨µÄµÚÒ»¸ö²ÎÊıÎªthis£¬»ñÈ¡²ÎÊıÁĞ±íÊ±ĞèÒª¼ÓÒ»
+			// åˆ¤æ–­è¯¥æ–¹æ³•æ˜¯å¦ä¸ºé™æ€æ–¹æ³•ï¼Œé™æ€æ–¹æ³•çš„ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºthisï¼Œè·å–å‚æ•°åˆ—è¡¨æ—¶éœ€è¦åŠ ä¸€
 			int pos = Modifier.isStatic(ctMethod.getModifiers()) ? 0 : 1;
 			for (int i = 0; i < ctMethod.getParameterTypes().length; i++) {
 				String name = attr.variableName(i + pos);
@@ -160,7 +167,7 @@ public class TinyHandlerInvoker {
 		} catch (NotFoundException e) {
 			logger.error("tinyFramework:=====  get method params fail; in {} , method : {}",
 					handler.getControllerClass().getClass().getName(), method.getName() );
-		//	System.err.println("javassist·½·¨»ñÈ¡ĞÎ²ÎÊ§°Ü" + e);
+		//	System.err.println("javassistæ–¹æ³•è·å–å½¢å‚å¤±è´¥" + e);
 			e.printStackTrace();
 		}
 		return nameTypeMap;

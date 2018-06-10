@@ -1,6 +1,7 @@
 package tiny.framework.mvc;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,10 +12,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tiny.framework.constant.TinyConstant;
+import tiny.framework.context.ContextContainer;
+import tiny.framework.context.TinyContext;
+import tiny.framework.core.PropUtil;
 import tiny.framework.core.TinyClassLoader;
 import tiny.framework.core.TinyHandlerInvoker;
 /**
- * ¿ò¼ÜÄ¬ÈÏservlet£¬À¹½ØËùÓĞÇëÇóÕÒµ½¶ÔÓ¦µÄtinyHandler½øĞĞ´¦Àí
+ * æ¡†æ¶é»˜è®¤servletï¼Œæ‹¦æˆªæ‰€æœ‰è¯·æ±‚æ‰¾åˆ°å¯¹åº”çš„tinyHandlerè¿›è¡Œå¤„ç†
  * 
  * @author lijun
  *
@@ -25,7 +30,7 @@ public class DispatcherServlet extends HttpServlet {
 
 	@Override
 	public void init() throws ServletException {
-		//³õÊ¼»¯¿ò¼Ü
+		//åˆå§‹åŒ–æ¡†æ¶
 		TinyClassLoader.init();
 		
 	}
@@ -43,22 +48,22 @@ public class DispatcherServlet extends HttpServlet {
 		if (!StringUtils.isEmpty(pathInfo)) {
 			curRequestPath = curRequestPath + pathInfo;
 		}
-		logger.debug("ÊÕµ½ÇëÇó{}:{}", curMethodType, curRequestPath);
-		// / ×ªµ½HomeÒ³
+		logger.debug("æ”¶åˆ°è¯·æ±‚{}:{}", curMethodType, curRequestPath);
+		// / è½¬åˆ°Homeé¡µ
 		if (curRequestPath.equals("/")) {
 
 		}
-		// È¥µô½áÎ²µÄ/
+		// å»æ‰ç»“å°¾çš„/
 		if (curRequestPath.endsWith("/")) {
 			curRequestPath = curMethodType.substring(0, curRequestPath.length() - 1);
 		}
 		//TinyHandler tinyHandler = TinyHandlerMapping.getHandler(curMethodType, curRequestPath);
 		TinyRequest tinyRequest = new TinyRequest(curMethodType, curRequestPath);
 		TinyHandler tinyHandler = ControllerHelper.getActionMap().get(tinyRequest);
-		// ÕÒ²»µ½¶ÔÓ¦µÄ´¦ÀíÀà£¬Ìøµ½404Ò³Ãæ
+		// æ‰¾ä¸åˆ°å¯¹åº”çš„å¤„ç†ç±»ï¼Œè·³åˆ°404é¡µé¢
 		if (tinyHandler == null) {
-			logger.debug("ÕÒ²»µ½ÇëÇóÂ·¾¶£º{}:{} ¶ÔÓ¦µÄ´¦ÀíÀà", curMethodType, curRequestPath);
-			//WebUtil.sendError(404, "ÕÒ²»µ½ÇëÇó×ÊÔ´", curResponse);
+			logger.debug("æ‰¾ä¸åˆ°è¯·æ±‚è·¯å¾„ï¼š{}:{} å¯¹åº”çš„å¤„ç†ç±»", curMethodType, curRequestPath);
+			WebUtil.sendError(404, "æ‰¾ä¸åˆ°è¯·æ±‚èµ„æº", curResponse);
 		} else {
 			TinyHandlerInvoker.invoke(curRequest,curResponse, tinyHandler);
 		}
@@ -68,26 +73,25 @@ public class DispatcherServlet extends HttpServlet {
 	}
 	
 	/**
-	 * ÔÚservice·½·¨Ö´ĞĞÖ®Ç°µÄ²Ù×÷£¬ÉèÖÃ±àÂë¡¢´´½¨ÉÏÏÂÎÄµÈ
+	 * åœ¨serviceæ–¹æ³•æ‰§è¡Œä¹‹å‰çš„æ“ä½œï¼Œè®¾ç½®ç¼–ç ã€åˆ›å»ºä¸Šä¸‹æ–‡ç­‰
 	 */
 	private void beforeService(HttpServletRequest request, HttpServletResponse response) {
-		// TODO 
-//		try {
-//			request.setCharacterEncoding(PropUtil.getField(TinyConstant.DEF_ENCODING , TinyConstant.DEF_ENCODING));
-//			response.setCharacterEncoding(TinyConstant.RESPONSE_ENCODE);
-//			TinyContext tinyContext = new TinyContext(request, response);
-//			ContextContainer.addTinyContext(tinyContext);
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			request.setCharacterEncoding(PropUtil.getField(TinyConstant.DEF_ENCODING , TinyConstant.DEF_ENCODING));
+			response.setCharacterEncoding(TinyConstant.DEF_ENCODING);
+			TinyContext tinyContext = new TinyContext(request, response);
+			ContextContainer.addTinyContext(tinyContext);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * ÍË³öserviceºóµÄ²Ù×÷£¬ÊÍ·ÅÉÏÏÂÎÄ×ÊÔ´µÈ
+	 * é€€å‡ºserviceåçš„æ“ä½œï¼Œé‡Šæ”¾ä¸Šä¸‹æ–‡èµ„æºç­‰
 	 */
 	private void afterService() {
 		// TODO
-//		ContextContainer.distory();
+		ContextContainer.distory();
 	}
 
 }

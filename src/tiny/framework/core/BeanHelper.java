@@ -24,12 +24,12 @@ public class BeanHelper {
 	private static final Map<Class<?>, Object> bean_map = new HashMap<>();
 
 	/**
-	 * ÊµÀı»¯bean
+	 * åˆå§‹åŒ–bean
 	 */
 	static {
 		try {
 			// Map<Class<?>, Object> map = new HashMap<>();
-			//logger.debug("classSet´óĞ¡Îª£º{}", class_set.size());
+			//logger.debug("classSetï¿½ï¿½Ğ¡Îªï¿½ï¿½{}", class_set.size());
 			for (Class<?> cls : class_set) {
 				if (cls.isAnnotationPresent(Service.class) 
 						|| cls.isAnnotationPresent(Bean.class)
@@ -42,11 +42,11 @@ public class BeanHelper {
 			}
 		} catch (Exception e) {
 			logger.error("tinyFramework:=====  , get instance fail {}" , e);
-			throw new RuntimeException("»ñÈ¡ÀàÊµÀıÊ§°Ü", e);
+			throw new RuntimeException("è·å–å®ä¾‹ç±»å¤±è´¥", e);
 		}
 	}
 
-	// »ñÈ¡Ö¸¶¨×¢½âÏÂµÄËùÓĞÀà
+	// è·å–æŒ‡å®šæ³¨è§£ä¸‹çš„ç±»é›†åˆ
 	public static Set<Class<?>> getAnnotationSet(Class<? extends Annotation> annotationClass) {
 		Set<Class<?>> set = new HashSet<>();
 		for (Class<?> cls : class_set) {
@@ -57,7 +57,7 @@ public class BeanHelper {
 		return set;
 	}
 
-	// »ñÈ¡service²ãµÄÀà
+	// è·å–å¸¦serviceæ³¨è§£çš„ç±»çš„
 	public static Set<Class<?>> getServiceSet() {
 		Set<Class<?>> set = new HashSet<>();
 		for (Class<?> cls : class_set) {
@@ -68,7 +68,7 @@ public class BeanHelper {
 		return set;
 	}
 
-	// »ñÈ¡controller²ãµÄÀà
+	// è·å–å¸¦controlleræ³¨è§£çš„ç±»
 	public static Set<Class<?>> getControllerSet() {
 		Set<Class<?>> set = new HashSet<>();
 		for (Class<?> cls : class_set) {
@@ -88,7 +88,7 @@ public class BeanHelper {
 		return bean_map.get(cls);
 	}
 
-	// ½«Ö¸¶¨µÄclassµÄÊµÀıÌæ»»
+	// å°†æŒ‡å®šçš„classçš„å®ä¾‹æ›¿æ¢
 	public static void setInstance(Class<?> cls, Object instance) {
 		bean_map.put(cls, instance);
 	}

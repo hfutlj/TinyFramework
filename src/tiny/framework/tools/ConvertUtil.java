@@ -6,14 +6,14 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * ÀàĞÍ×ª»»
+ * ç±»å‹è½¬æ¢
  * @author lee
  *
  */
 public class ConvertUtil {
 
 	/**
-	 * ²ÎÊıÀàĞÍ½âÎöÆ÷
+	 * å‚æ•°ç±»å‹è§£æå™¨
 	 * @param sourceObj
 	 * @param type
 	 * @return
@@ -26,7 +26,7 @@ public class ConvertUtil {
 		if (targetType.isArray()) {
 			type = targetType.getComponentType();
 		}
-		// ÎªÁËÍ¨ÓÃĞÔ½«sourceObj°ü×°³ÉÊı×é½âÎö
+		// ä¸ºäº†é€šç”¨æ€§å°†sourceObjåŒ…è£…æˆæ•°ç»„è§£æ
 		Object array = sourceObj;
 		if (!sourceObj.getClass().isArray()) {
 			array = Array.newInstance(sourceObj.getClass(), 1);
@@ -37,17 +37,17 @@ public class ConvertUtil {
 			//Array.set(res, i, null);
 			Object element = Array.get(array, i);
 			if (CharSequence.class.isAssignableFrom(type)) {
-				// ×Ö·û´®ÀàĞÍ
+				// å­—ç¬¦ä¸²ç±»å‹
 				Array.set(res, i, convertString(element));
 				continue;
 			}
 			if(ClassUtil.getNumber(element, type) != null) {
-				// Êı×ÖÀàĞÍ
+				// æ•°å­—ç±»å‹
 				Array.set(res, i, ClassUtil.getNumber(element, type));
 				continue;
 			}
 //			if(TFile.class.isAssignableFrom(type)) {
-//				// ÎÄ¼şÀàĞÍ
+//				// æ–‡ä»¶ç±»å‹
 //				TFile tFile = null;
 //				try {
 //					tFile = (TFile)element;
@@ -57,7 +57,7 @@ public class ConvertUtil {
 //				Array.set(res, i, tFile);
 //				continue;
 //			}
-			// TODO JavaBeanµÈÀàĞÍ
+			// TODO JavaBeanç­‰ç±»å‹
 		}
 		
 		if(targetType.isArray()) {
@@ -175,7 +175,7 @@ public class ConvertUtil {
 	}
 
 	/**
-	 * ·µ»ØobjµÄstringĞÎÊ½£¬Èç¹ûobjÎªnull·µ»Ø¿Õ×Ö·û´®
+	 * è¿”å›objçš„stringå½¢å¼ï¼Œå¦‚æœobjä¸ºnullè¿”å›ç©ºå­—ç¬¦ä¸²
 	 */
 	public static String convertString(Object obj) {
 		return obj == null ? "" : obj.toString();

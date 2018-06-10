@@ -12,7 +12,7 @@ import tiny.framework.core.BeanHelper;
 import tiny.framework.core.ClassHelper;
 
 /**
- * IOCÒıÇæ£¬×¢Èë´øInject×¢½âµÄÊôĞÔµÄBean
+ * IOCå¼•æ“ï¼Œæ³¨å…¥å¸¦Injectæ³¨è§£çš„å±æ€§çš„Bean
  * @author lee
  *
  */
@@ -25,19 +25,19 @@ public class IOCEngine {
 		for (Entry<Class<?>, Object> entry : map.entrySet()) {
 			Class<?> cls = entry.getKey();
 			Object instance = entry.getValue();
-			// »ñÈ¡ËùÓĞµÄÉùÃ÷µÄÊôĞÔ
+			// è·å–æ‰€æœ‰çš„å£°æ˜çš„å±æ€§
 			Field[] fields = cls.getDeclaredFields();
-			// ÕÒ³ö´øÓĞ×¢½âµÄÊôĞÔ
+			// æ‰¾å‡ºå¸¦æœ‰æ³¨è§£çš„å±æ€§
 			for (Field field : fields) {
 				if (field.isAnnotationPresent(Inject.class)) {
-					// »ñÈ¡×¢ÈëÀàµÄÀàĞÍ
+					// è·å–æ³¨å…¥ç±»çš„ç±»å‹
 					Class<?> interfaceType = field.getType();
-					// ²é¿´ÊÇ·ñ´æÔÚÊµÏÖÀà
+					// æŸ¥çœ‹æ˜¯å¦å­˜åœ¨å®ç°ç±»
 					Object implementClass = map.get(interfaceType);
 					if (implementClass == null) {
 						logger.error("tinyFramework:=====  inject field :" + field.getName() + "Fail , can't find implment class ");
 						throw new RuntimeException(
-								"×¢ÈëÊôĞÔ" + field.getName() + "Ê§°Ü£¬Î´ÄÜÕÒµ½ÊµÏÖÀà£º " + interfaceType.getName());
+								"æ³¨å…¥å±æ€§" + field.getName() + "å¤±è´¥ï¼Œæœªèƒ½æ‰¾åˆ°å®ç°ç±»ï¼š " + interfaceType.getName());
 					} else {
 						field.setAccessible(true);
 						try {

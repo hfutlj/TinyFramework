@@ -4,7 +4,7 @@ package tiny.framework.mvc;
 import java.lang.reflect.Method;
 
 /**
- * request的处理类，对应的方法，是否以json格式返回
+ * request鐨勫鐞嗙被锛屽搴旂殑鏂规硶锛屾槸鍚︿互json鏍煎紡杩斿洖
  * @author lijun
  *
  */

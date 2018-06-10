@@ -4,14 +4,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>TinyFramework</groupId>
 	<artifactId>TinyFramework</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-<!-- 	<properties> -->
-		<!-- 文件拷贝时的编码 --> 
-<!-- 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
-<!-- 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding> -->
+	<version>1.0.0</version>
+	<properties>
+		<!-- 文件拷贝时的编码 -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- 编译时的编码 -->
-<!-- 		<maven.compiler.encoding>UTF-8</maven.compiler.encoding> -->
-<!-- 	</properties> -->
+		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -39,6 +39,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.12</version>
+			<scope>compile</scope>
 		</dependency>
 
 
@@ -75,6 +76,7 @@
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
 			<version>3.2.5</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- 文件上传 -->
@@ -82,6 +84,7 @@
 			<groupId>commons-fileUpload</groupId>
 			<artifactId>commons-fileUpload</artifactId>
 			<version>1.2.1</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- 反向读取class文件 -->
@@ -89,6 +92,15 @@
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.22.0-GA</version>
+			<scope>compile</scope>
 		</dependency>
+
+		<!-- Json解析 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.47</version>
+		</dependency>
+
 	</dependencies>
 </project>

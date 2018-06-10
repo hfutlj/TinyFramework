@@ -29,33 +29,33 @@ public class FileHelper {
 
 //	@SuppressWarnings("unchecked")
 //	public static List<Object> getMultipartParam(HttpServletRequest request) {
-//		// ÎÄ¼ş²ÎÊı
+//		// æ–‡ä»¶å‚æ•°
 //		List<TFile> fileList = new ArrayList<>();
-//		// ÆÕÍ¨²ÎÊı
+//		// æ™®é€šå‚æ•°
 //		Map<String, String> normalParam = new HashMap<>();
 //
 //		List<Object> params = new ArrayList<>();
 //		fileUpload = new ServletFileUpload(new DiskFileItemFactory());
 //		try {
 //			List<FileItem> fileItems = fileUpload.parseRequest(request);
-//			logger.debug("request×ªÎÄ¼ş²ÎÊıÎª:{}", params);
+//			logger.debug("requestè½¬æ–‡ä»¶å‚æ•°ä¸º:{}", params);
 //			for (FileItem fileItem : fileItems) {
 //				String name = fileItem.getFieldName();
 //				if (fileItem.isFormField()) {
 //					normalParam.put(name, fileItem.getString(TinyConstant.def_encode));
-//				} else { // ÎÄ¼şÉÏ´«
+//				} else { // æ–‡ä»¶ä¸Šä¼ 
 //					String filedName = fileItem.getFieldName();
 //					String fileName = fileItem.getName();
 //					String contentType = fileItem.getContentType();
 //					long size = fileItem.getSize();
 //					InputStream in = fileItem.getInputStream();
 //					TFile tFile = new TFile(filedName ,fileName, size, contentType, in);
-//					logger.debug("ÎÄ¼şÉÏ´«µÄÎÄ¼şÀàĞÍ²ÎÊıÎª£º", tFile);
+//					logger.debug("æ–‡ä»¶ä¸Šä¼ çš„æ–‡ä»¶ç±»å‹å‚æ•°ä¸ºï¼š", tFile);
 //					fileList.add(tFile);
 //				}
 //			}
 //		} catch (Exception e) {
-//			logger.error("ÎÄ¼ş²ÎÊı»ñÈ¡³ö´í£º {}", e);
+//			logger.error("æ–‡ä»¶å‚æ•°è·å–å‡ºé”™ï¼š {}", e);
 //			e.printStackTrace();
 //		} finally {
 //			params.add(fileList.get(0));
@@ -65,7 +65,7 @@ public class FileHelper {
 //	}
 
 	/**
-	 * »ñÈ¡MultipartÀàĞÍµÄpost±íµ¥²ÎÊıÁĞ±í
+	 * è·å–Multipartç±»å‹çš„postè¡¨å•å‚æ•°åˆ—è¡¨
 	 * 
 	 * @param request
 	 * @param handler
@@ -75,7 +75,7 @@ public class FileHelper {
 		List<Object> paramList = new ArrayList<>();
 		if (!"POST".equalsIgnoreCase(request.getMethod()) || !ServletFileUpload.isMultipartContent(request)) {
 			logger.debug("tinyFramework:=====  ,only support multipart type post file; {}" , request.getRequestURI());
-			//logger.debug("ÎÄ¼şÉÏ´«µÄ±íµ¥ÀàĞÍ±ØĞëÎªmultipartĞÍµÄpostÌá½»");
+			//logger.debug("æ–‡ä»¶ä¸Šä¼ çš„è¡¨å•ç±»å‹å¿…é¡»ä¸ºmultipartå‹çš„postæäº¤");
 			return null;
 		}
 		
@@ -84,11 +84,11 @@ public class FileHelper {
 			@SuppressWarnings("unchecked")
 			List<FileItem> fileItems = servletFileUpload.parseRequest(request);
 			Map<String, Class<?>> nameTypeMap = TinyHandlerInvoker.getNameTypeMap(handler);
-			// »ñÈ¡MultipartÀàĞÍ±íµ¥µÄ²ÎÊıÁĞ±í
+			// è·å–Multipartç±»å‹è¡¨å•çš„å‚æ•°åˆ—è¡¨
 			Map<String, List<Object>> paramsMap = new HashMap<>();
 			for (FileItem fileItem : fileItems) {
 				if (fileItem.isFormField()) {
-					// ÆÕÍ¨ÀàĞÍ
+					// æ™®é€šç±»å‹
 					String name = fileItem.getFieldName();
 					String value = fileItem.getString(TinyConstant.DEF_ENCODING);
 					if (paramsMap.get(name) == null) {
@@ -99,7 +99,7 @@ public class FileHelper {
 						paramsMap.get(name).add(value);
 					}
 				} else {
-					// ÎÄ¼şÀàĞÍ
+					// æ–‡ä»¶ç±»å‹
 					String name = fileItem.getFieldName();
 					TFile tFile = new TFile(fileItem.getFieldName(),fileItem.getName(),  fileItem.getSize(),
 							fileItem.getContentType(), fileItem.getInputStream());
@@ -112,9 +112,9 @@ public class FileHelper {
 					}
 				}
 			}
-			logger.info("multipart²ÎÊıÓ³Éä{}",paramsMap);
-			logger.info("ĞÎ²ÎÓ³Éä{}" , nameTypeMap);
-			// ²ÎÊı½âÎö
+			logger.info("multipartå‚æ•°æ˜ å°„{}",paramsMap);
+			logger.info("å½¢å‚æ˜ å°„{}" , nameTypeMap);
+			// å‚æ•°è§£æ
 			for(Entry<String, Class<?>> entry : nameTypeMap.entrySet()) {
 				String name = entry.getKey();
 				Class<?> type = entry.getValue();

@@ -52,7 +52,7 @@ public class TFile {
 				try {
 					out.close();
 				} catch (IOException e) {
-					logger.error("ÎÄ¼şÁ÷¹Ø±Õ³ö´í");
+					logger.error("æ–‡ä»¶æµå…³é—­å‡ºé”™");
 				}
 			}
 		}
